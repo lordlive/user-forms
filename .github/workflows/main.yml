@@ -1,0 +1,32 @@
+name: Build C# application
+on:
+  push:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v6
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v5
+      with:
+        dotnet-version: '10.0.x' # Вкажіть потрібну версію SDK
+    - name: set folder
+      run: cd UsersForms
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --no-restore --configuration Release
+
+    - name: Test
+      run: dotnet test --no-restore --verbosity normal
+
+    - uses: actions/upload-artifact@v7
+      with:
+        name: build-artifact
+        path: UsersForms/bin/Release/*
+  

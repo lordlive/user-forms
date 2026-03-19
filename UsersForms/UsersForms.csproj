@@ -6,6 +6,7 @@
     <UseWindowsForms>true</UseWindowsForms>
     <RootNamespace>UsersForms</RootNamespace>
     <AssemblyName>UsersForms</AssemblyName>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
   </PropertyGroup>
   <ItemGroup>
     <!-- Compile includes видалені, бо SDK-style автоматично підключає всі .cs файли -->

@@ -3,7 +3,7 @@ on:
   push:
 
 jobs:
-  build:
+  build-windows:
     runs-on: windows-latest
 
     steps:
@@ -29,4 +29,67 @@ jobs:
       with:
         name: build-artifact
         path: UsersForms/bin/Release/*
-  
+
+  build-ios:
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '10.0.x'
+
+    - name: Install iOS Workload
+      run: dotnet workload install ios
+
+    # Крок для встановлення сертифікатів (рекомендовано використовувати готові Actions)      
+    # - name: Install Apple Certificate
+    #   uses: apple-actions/import-codesign-certs@v2
+    #   with:
+    #     p12-file-base64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
+    #     p12-password: ${{ secrets.P12_PASSWORD }}
+
+    # - name: Install Provisioning Profile
+    #   uses: apple-actions/download-provisioning-profiles@v1
+    #   with:
+    #     bundle-id: 'com.yourcompany.yourapp'
+    #     profile-type: 'IOS_APP_STORE'
+    #     issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
+    #     api-key-id: ${{ secrets.APPSTORE_KEY_ID }}
+    #     api-private-key: ${{ secrets.APPSTORE_PRIVATE_KEY }}
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    # - name: Build and Archive
+    #   # Для створення .ipa файлу використовуйте dotnet publish з параметром ArchiveOnBuild
+    #   run: |
+    #     dotnet publish -f net10.0-ios \
+    #     -c Release \
+    #     /p:ArchiveOnBuild=true \
+    #     /p:CodesignKey="Apple Distribution: Your Name (ID)" \
+    #     /p:CodesignProvision="Your Provisioning Profile Name"
+
+    # Збірка для симулятора (найпростіший варіант)
+    - name: Build for Simulator
+      run: |
+        dotnet build -f net10.0-ios \
+        -c Debug \
+        /p:BuildIpa=false \
+        /p:RuntimeIdentifier=iossimulator-x64
+
+    #  Збірка для Release без підпису (Skip Code Signing)
+    - name: Build Release without Signing
+      run: |
+        dotnet build -f net10.0-ios \
+        -c Release \
+        /p:CodesignKey="-" \
+        /p:CodesignProvision="-" \
+        /p:IsUnsigned=true
+
+    - uses: actions/upload-artifact@v7
+      with:
+        name: build-artifact
+        path: .

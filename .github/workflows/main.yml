@@ -3,32 +3,32 @@ on:
   push:
 
 jobs:
-  build-windows:
-    runs-on: windows-latest
+  # build-windows:
+  #   runs-on: windows-latest
 
-    steps:
-    - uses: actions/checkout@v6
+  #   steps:
+  #   - uses: actions/checkout@v6
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v5
-      with:
-        dotnet-version: '10.0.x' # Вкажіть потрібну версію SDK
-    - name: set folder
-      run: cd UsersForms
+  #   - name: Setup .NET
+  #     uses: actions/setup-dotnet@v5
+  #     with:
+  #       dotnet-version: '10.0.x' # Вкажіть потрібну версію SDK
+  #   - name: set folder
+  #     run: cd UsersForms
 
-    - name: Restore dependencies
-      run: dotnet restore
+  #   - name: Restore dependencies
+  #     run: dotnet restore
 
-    - name: Build
-      run: dotnet build --no-restore --configuration Release
+  #   - name: Build
+  #     run: dotnet build --no-restore --configuration Release
 
-    - name: Test
-      run: dotnet test --no-restore --verbosity normal
+  #   - name: Test
+  #     run: dotnet test --no-restore --verbosity normal
 
-    - uses: actions/upload-artifact@v7
-      with:
-        name: build-artifact
-        path: UsersForms/bin/Release/*
+  #   - uses: actions/upload-artifact@v7
+  #     with:
+  #       name: build-artifact
+  #       path: UsersForms/bin/Release/*
 
   build-ios:
     runs-on: macos-latest
@@ -66,7 +66,7 @@ jobs:
     # - name: Build and Archive
     #   # Для створення .ipa файлу використовуйте dotnet publish з параметром ArchiveOnBuild
     #   run: |
-    #     dotnet publish -f net10.0-ios \
+    #     dotnet publish -f net8.0-ios \
     #     -c Release \
     #     /p:ArchiveOnBuild=true \
     #     /p:CodesignKey="Apple Distribution: Your Name (ID)" \
@@ -75,7 +75,7 @@ jobs:
     # Збірка для симулятора (найпростіший варіант)
     - name: Build for Simulator
       run: |
-        dotnet build -f net10.0-ios \
+        dotnet build -f net8.0-ios \
         -c Debug \
         /p:BuildIpa=false \
         /p:RuntimeIdentifier=iossimulator-x64
@@ -83,7 +83,7 @@ jobs:
     #  Збірка для Release без підпису (Skip Code Signing)
     - name: Build Release without Signing
       run: |
-        dotnet build -f net10.0-ios \
+        dotnet build -f net8.0-ios \
         -c Release \
         /p:CodesignKey="-" \
         /p:CodesignProvision="-" \

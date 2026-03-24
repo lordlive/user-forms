@@ -42,8 +42,8 @@ namespace UsersForms
 
         private void checkBoxAdmin_CheckedChanged(object sender, EventArgs e)
         {
-            //if (admChange) admChange = false;
-            //else admChange = true;
+            if (admChange) admChange = false;
+            else admChange = true;
         }
     }
 }

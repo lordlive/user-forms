@@ -13,7 +13,7 @@ namespace UsersForms
     public partial class AddForms : Form
     {
         // Data transfer event
-        public static bool admChange = false;
+        public bool admChange = false;
         public event EventHandler<UserEventArgs> sendDataFormEvent;
         public AddForms()
 

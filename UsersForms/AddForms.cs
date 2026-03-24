@@ -12,31 +12,31 @@ namespace UsersForms
 {
     public partial class AddForms : Form
     {
-        //Событие для передачи данных
+        // Data transfer event
         public static bool admChange = false;
         public event EventHandler<UserEventArgs> sendDataFormEvent;
-        public AddForms()            
+        public AddForms()
 
-        {            
+        {
             InitializeComponent();
 
         }
 
         private void buttonAddOk_Click(object sender, EventArgs e)
         {
-            //создаем объект типа UserClass
+            // Create an object of type UserClass
             UserClass temp = new UserClass(textBoxName.Text, textBoxPass.Text);
             if (checkBoxAdmin.Checked)
                 temp.aUser = true;
             else
                 temp.aUser = false;
             temp.dUser = false;
-            //Генерируем событие с именованным аргументом
-            //в класс аргумента передаем созданный объект
+            // Generate event with named argument
+            // Pass the created object to the argument class
             if (sendDataFormEvent != null)
                 sendDataFormEvent(this, new UserEventArgs(temp));
 
-            //Закрываем форму
+            // Close the form
             this.Close();
         }
 

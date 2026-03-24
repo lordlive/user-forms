@@ -12,9 +12,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v5
       with:
-        dotnet-version: '10.0.x' # Вкажіть потрібну версію SDK
-    # - name: set folder
-    #   run: cd UsersForms
+        dotnet-version: '10.0.x' # set the needed a SDK version
 
     - name: Install SonarScanner for .NET
       run: dotnet tool install --global dotnet-sonarscanner
@@ -72,7 +70,7 @@ jobs:
   #   - name: Install iOS Workload
   #     run: dotnet workload install ios
 
-  #   # Крок для встановлення сертифікатів (рекомендовано використовувати готові Actions)      
+  #   # Step for installing certificates (it is recommended to use ready-made Actions)
   #   # - name: Install Apple Certificate
   #   #   uses: apple-actions/import-codesign-certs@v2
   #   #   with:
@@ -100,7 +98,7 @@ jobs:
   #   #     /p:CodesignKey="Apple Distribution: Your Name (ID)" \
   #   #     /p:CodesignProvision="Your Provisioning Profile Name"
 
-  #   # Збірка для симулятора (найпростіший варіант)
+  #   # Assembly for the simulator (the simplest option)
   #   - name: Build for Simulator
   #     run: |
   #       dotnet build -f net8.0-ios \
@@ -108,7 +106,7 @@ jobs:
   #       /p:BuildIpa=false \
   #       /p:RuntimeIdentifier=iossimulator-x64
 
-  #   #  Збірка для Release без підпису (Skip Code Signing)
+  #   #  Build for Release without signing (Skip Code Signing)
   #   - name: Build Release without Signing
   #     run: |
   #       dotnet build -f net8.0-ios \

@@ -2,17 +2,16 @@
 
 namespace UsersForms
 {
-    //public класс, наследник от EventArgs
-    //Используется как аргумент для передачи данных
-    //в событиях
+    // public class, descendant from EventArgs
+    // Used as an argument for passing data in events
     public class UserEventArgs : EventArgs
     {
-        //public (readonly) поле класса
+        // public (readonly) field of the class
         public UserClass SendingUser;
-        //Конструктор класса с параметром
+        // Constructor of the class with a parameter
         public UserEventArgs(UserClass User)
         {
-            // передает объект типа UserClass
+            // passes an object of type UserClass
             SendingUser = User;
         }
     }

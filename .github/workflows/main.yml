@@ -1,9 +1,10 @@
 name: Build C# application
 on:
   push:
+  workflow_dispatch:
 
 jobs:
-  build:
+  build-windows:
     runs-on: windows-latest
 
     steps:
@@ -12,16 +13,42 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v5
       with:
-        dotnet-version: '10.0.x' # Вкажіть потрібну версію SDK
-    - name: set folder
-      run: cd UsersForms
+        dotnet-version: '10.0.x' # set the needed a SDK version
+
+    - name: Install SonarScanner for .NET
+      run: dotnet tool install --global dotnet-sonarscanner
 
     - name: Restore dependencies
       run: dotnet restore
 
+    - name: Begin SonarQube Analysis
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      run: |
+        dotnet sonarscanner begin /k:"lordlive.user-forms" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}"
+
+
     - name: Build
       run: dotnet build --no-restore --configuration Release
 
+    - name: Run SonarQube Analysis End
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      run: |
+        dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+
+    - name: SonarQube Quality Gate check
+      uses: SonarSource/sonarqube-quality-gate-action@v1.2.0 # Checks the quality gate status
+      with:
+        scanMetadataReportFile: .sonarqube/out/.sonar/report-task.txt
+      timeout-minutes: 5
+      continue-on-error: true
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+   
     - name: Test
       run: dotnet test --no-restore --verbosity normal
 
@@ -29,4 +56,67 @@ jobs:
       with:
         name: build-artifact
         path: UsersForms/bin/Release/*
-  
+
+  # build-ios:
+  #   runs-on: macos-latest
+
+  #   steps:
+  #   - uses: actions/checkout@v4
+
+  #   - name: Setup .NET
+  #     uses: actions/setup-dotnet@v4
+  #     with:
+  #       dotnet-version: '10.0.x'
+
+  #   - name: Install iOS Workload
+  #     run: dotnet workload install ios
+
+  #   # Step for installing certificates (it is recommended to use ready-made Actions)
+  #   # - name: Install Apple Certificate
+  #   #   uses: apple-actions/import-codesign-certs@v2
+  #   #   with:
+  #   #     p12-file-base64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
+  #   #     p12-password: ${{ secrets.P12_PASSWORD }}
+
+  #   # - name: Install Provisioning Profile
+  #   #   uses: apple-actions/download-provisioning-profiles@v1
+  #   #   with:
+  #   #     bundle-id: 'com.yourcompany.yourapp'
+  #   #     profile-type: 'IOS_APP_STORE'
+  #   #     issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
+  #   #     api-key-id: ${{ secrets.APPSTORE_KEY_ID }}
+  #   #     api-private-key: ${{ secrets.APPSTORE_PRIVATE_KEY }}
+
+  #   - name: Restore dependencies
+  #     run: dotnet restore
+
+  #   # - name: Build and Archive
+  #   #   # Для створення .ipa файлу використовуйте dotnet publish з параметром ArchiveOnBuild
+  #   #   run: |
+  #   #     dotnet publish -f net8.0-ios \
+  #   #     -c Release \
+  #   #     /p:ArchiveOnBuild=true \
+  #   #     /p:CodesignKey="Apple Distribution: Your Name (ID)" \
+  #   #     /p:CodesignProvision="Your Provisioning Profile Name"
+
+  #   # Assembly for the simulator (the simplest option)
+  #   - name: Build for Simulator
+  #     run: |
+  #       dotnet build -f net8.0-ios \
+  #       -c Debug \
+  #       /p:BuildIpa=false \
+  #       /p:RuntimeIdentifier=iossimulator-x64
+
+  #   #  Build for Release without signing (Skip Code Signing)
+  #   - name: Build Release without Signing
+  #     run: |
+  #       dotnet build -f net8.0-ios \
+  #       -c Release \
+  #       /p:CodesignKey="-" \
+  #       /p:CodesignProvision="-" \
+  #       /p:IsUnsigned=true
+
+  #   - uses: actions/upload-artifact@v7
+  #     with:
+  #       name: build-artifact
+  #       path: .

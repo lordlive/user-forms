@@ -6,10 +6,11 @@
     <UseWindowsForms>true</UseWindowsForms>
     <RootNamespace>UsersForms</RootNamespace>
     <AssemblyName>UsersForms</AssemblyName>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
   </PropertyGroup>
   <ItemGroup>
-    <!-- Compile includes видалені, бо SDK-style автоматично підключає всі .cs файли -->
-    <!-- EmbeddedResource видалені, бо SDK-style автоматично підключає всі .resx файли -->
+    <!-- Compile includes is removed, because SDK-style automatically includes all .cs files -->
+    <!-- EmbeddedResource is removed because SDK-style automatically includes all .resx files -->
     <None Include="App.config" />
     <None Include="Properties\Settings.settings" />
   </ItemGroup>

@@ -12,23 +12,23 @@ namespace UsersForms
     static class Program
     {
         /// <summary>
-        /// Главная точка входа для приложения.
+        /// The main entry point for the application.
         /// </summary>
         [STAThread]
         static void Main()
         {
-            //объявляем список объектов типa UserClass
+            // Declare a list of UserClass objects
             List<UserClass> Users = new List<UserClass>();
-            //проверяем наличие дайла с данными
+            // Check for the existence of the data file
             if (File.Exists("user.xml"))
             {
-                Users = DeSerialize(); // если файл есть читаем данные
+                Users = DeSerialize(); // if the file exists, read the data
             }
-            else // если нет создаем по умолчанию
+            else // if the file does not exist, create a default one
             {
                 Users.Add(new UserClass("admin", "admin1234", true, true));
                 Users.Add(new UserClass("user1", "qwerty123", true, false));
-                Serialize(Users); //и сохраняем
+                Serialize(Users); // and save it
             }
 
             Application.EnableVisualStyles();
@@ -37,10 +37,10 @@ namespace UsersForms
         }
         public static void Serialize(List<UserClass> temp)
         {
-            // передаем в конструктор тип класса
-            // получаем поток, куда будем записывать сериализованный объект            
+            // we pass the class type to the constructor
+            // we get a stream where we will write the serialized object           
             FileStream fs = new FileStream("user.xml", FileMode.Create);
-            // создаем объект XmlSerializer            
+            // create an XmlSerializer object
             XmlSerializer formatter = new XmlSerializer(typeof(List<UserClass>));
             try
             {
@@ -48,7 +48,7 @@ namespace UsersForms
             }
             catch (SerializationException e)
             {
-                Console.WriteLine("Объект не сериализован основание: " + e.Message);
+                Console.WriteLine("Object not serialized reason: " + e.Message);
             }
             finally
             {
@@ -57,26 +57,26 @@ namespace UsersForms
         }
         static List<UserClass> DeSerialize()
         {
-            // создаем временный объект для десериализации
+            // create a temporary object for deserialization
             List<UserClass> lists = new List<UserClass>();
-            //открываем поток из файла        
+            // open a stream from the file
             FileStream fs = new FileStream("user.xml", FileMode.OpenOrCreate);
             try
             {
-                // создаем объект XmlSerializer
+                // create an XmlSerializer object
                 XmlSerializer formatter = new XmlSerializer(typeof(List<UserClass>));
                 lists = (List<UserClass>)formatter.Deserialize(fs);
                 return lists;
             }
             catch (SerializationException e)
             {
-                Console.WriteLine("Объект не десериализован основание: " + e.Message);
+                Console.WriteLine("Object not deserialized reason: " + e.Message);
                 throw;
             }
             finally
             {
-                fs.Close();// закрываем поток
+                fs.Close(); // closing the stream
             }
         }
-    }    
+    }
 }

@@ -12,123 +12,123 @@ namespace UsersForms
 {
     public partial class MainForm : Form
     {
-        //статическая переменная класа в которую записываются данные с формы для ввода логина и пароля
+        // static class variable into which data from the login and password form is written
         public static UserClass login = new UserClass();
-        //статическая переменная определяющая текущее положение в списке пользователей
+        // static variable defining the current position in the list of users
         public static int CountList = 0;
-        public static List<UserClass> Work; //список пользоветелей 
+        public static List<UserClass> Work; // list of users
         public MainForm(List<UserClass> Users)
 
         {
-            // первой формой должна быть форма проверки логина и пароля и только после успешной аутендификациии
-            //запускается основная форма!!!!
+            // the first form should be the login and password verification form and only after successful authentication
+            // main form starts!!!!
             //List<UserClass> Base = Users;
-            Work = Users;  // присваеваем списку пользователей полученный список из стартовой программы
-            bool accsesLog = false; // переменная о правильности логина
-            bool accsesPas = false; // переменная о првильности пароля 
+            Work = Users;  // we assign the list of users received from the startup program
+            bool accsesLog = false; // variable indicating the correctness of the login
+            bool accsesPas = false; // variable indicating the correctness of the password
 
             InitializeComponent();
-            //создаем форму ввода логина и пароля
+            // create a login and password entry form
             LoginForms pForm = new LoginForms();
-            //Подключение обработчика события в дочерней форме
-            pForm.sendDataFormEvent += new EventHandler<UserEventArgs>(pForm_sendDataFormEvent);            
-            //Выводим ее для заполнения текстовых полей
+            // Attaching an event handler to a child form
+            pForm.sendDataFormEvent += new EventHandler<UserEventArgs>(pForm_sendDataFormEvent);
+            // Display it for filling the text fields
             pForm.ShowDialog();
-            //проверяем коректность ввода пользователя и пароля
+            // check the correctness of the user input and password
             foreach (UserClass temp in Work)
-                if (login.Name == temp.Name) // проверяем есть ли такой логин
+                if (login.Name == temp.Name) // check if such a login exists
                 {
                     accsesLog = true;
-                    if (login.Password == temp.Password) // проверяем соответствует ли ему пароль
+                    if (login.Password == temp.Password) // check if the password matches
                     {
                         accsesPas = true;
                         login.aUser = temp.aUser;
                     }
                 }
-                if (accsesLog != accsesPas || !accsesLog)
-                {
-                    // выводим сообщение о неверноми логине и пароле
-                    MessageBox.Show("Логин или пароль не верны", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    //после нажатия на кнопку (ок) закрываем приложение
-                    Environment.Exit(0); // закрываем приложение
-                }
-            UserClass workUser = login; //текущий пользователь
+            if (accsesLog != accsesPas || !accsesLog)
+            {
+                // we display a message about an incorrect login and password
+                MessageBox.Show("Login or password is incorrect", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                // After clicking the (OK) button, close the application
+                Environment.Exit(0); // close the application
+            }
+            UserClass workUser = login; // current user
             if (!workUser.aUser)
             {
-                //если пользователь не администратор то запрет доступа к кнопкам
+                // if the user is not an administrator, deny access to the buttons
                 buttonAdd.Enabled = false;
                 buttonSave.Enabled = false;
                 buttonDel.Enabled = false;
             }
-            login = null; //обнуляем ссылку 
+            login = null; // reset the link
 
-            //Выводим информацию о текущем пользователе 
-            //Выводим имя пользователя
+            // Displaying information about the current user
+            //Display the user's name
             textBoxName.Text = Work[CountList].Name.ToString();
-            //выводим тип пользователя
+            // Display the user type
             if (Work[CountList].aUser)
                 textBoxType.Text = "Administrator";
             else
                 textBoxType.Text = "User";
         }
-        //Обработчик события получения данных из дочерней формы
+        // Handler for the event of receiving data from the child form
         void pForm_sendDataFormEvent(object sender, UserEventArgs e)
         {
-            //получаем объект из класса
+            // receive the object from the class
             login = e.SendingUser;
             //MessageBox.Show(login.Name);
             //textBoxLog.Text = login.Name;
             //textBoxPass.Text = login.Password;
-        }        
-        // Нажата кнопка просмотра следующего елемента списка пользователей
+        }
+        // Handler for the event of viewing the next element in the user list
         private void buttonNext_Click(object sender, EventArgs e)
         {
-            //провенряем что не конец списка и увеличиваем счетчик на 1 
-            if (CountList < Work.Count-1)
+            // check that we are not at the end of the list and increment the counter by 1
+            if (CountList < Work.Count - 1)
                 CountList++;
-            //Выводим имя пользователя
+            // Display the user's name
             textBoxName.Text = Work[CountList].Name.ToString();
-            //выводим тип пользователя
+            // Display the user type
             if (Work[CountList].aUser)
                 textBoxType.Text = "Administrator";
             else
                 textBoxType.Text = "User";
         }
-        // Нажата кнопка просмотра предыдущего елемента списка пользователей
+        // Handler for the event of viewing the previous element in the user list
         private void buttonPrevius_Click(object sender, EventArgs e)
         {
-            //провенряем что не начало списка и уменьшаем счетчик на 1 
+            // check that we are not at the beginning of the list and decrement the counter by 1
             if (CountList > 0)
                 CountList--;
-            //Выводим имя пользователя
+            //Display the user's name
             textBoxName.Text = Work[CountList].Name.ToString();
-            //выводим тип пользователя
+            // Display the user type
             if (Work[CountList].aUser)
                 textBoxType.Text = "Administrator";
             else
                 textBoxType.Text = "User";
         }
-        // нажата кнопка добавления нового пользователя в список
+        // Handler for the event of adding a new user to the list
         private void buttonAdd_Click(object sender, EventArgs e)
         {
             AddForms pForm = new AddForms();
-            //Подключение обработчика события в дочерней форме
+            // Connect the event handler to the child form
             pForm.sendDataFormEvent += new EventHandler<UserEventArgs>(pForm_sendDataFormEvent);
-            //Выводим ее для заполнения текстовых полей
+            // We display it to fill text fields
             pForm.ShowDialog();
             Work.Add(login);
         }
-        //нажата кнопка сохранить(сохраняем текущую базу пользователей)
+        // Handler for the event of saving the current user database
         private void buttonSave_Click(object sender, EventArgs e)
         {
             Program.Serialize(Work);
         }
-        //нажата кнопка удаления выбранного пользователя
+        // Handler for the event of deleting the selected user
         private void buttonDel_Click(object sender, EventArgs e)
         {
-            //проверяем что счетчик находится внутри списка и удаляем текущую запись
-            if (CountList >= 0 & CountList < Work.Count - 1)
-                if (Work[CountList].dUser != true) // проверяем что выбранный для удаления пользователь не является пользователем по умолчанию
+            // check that the counter is within the list bounds and remove the current record
+            if (CountList >= 0 && CountList < Work.Count - 1)
+                if (Work[CountList].dUser != true) // check that the selected user for deletion is not the default user
                     Work.RemoveAt(CountList);
 
         }

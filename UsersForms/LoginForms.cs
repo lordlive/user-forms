@@ -12,9 +12,9 @@ namespace UsersForms
 {
     public partial class LoginForms : Form
     {
-        //Событие для передачи данных
+        // Data transfer event
         public event EventHandler<UserEventArgs> sendDataFormEvent;
-        //Конструктор формы
+        // Form designer
         public LoginForms()
         {
             InitializeComponent();
@@ -22,14 +22,14 @@ namespace UsersForms
 
         private void buttonOk_Click(object sender, EventArgs e)
         {
-            //создаем объект типа UserClass
+            // Create an object of type UserClass
             UserClass temp = new UserClass(textBoxLogin.Text, textBoxPassword.Text);
-            //Генерируем событие с именованным аргументом
-            //в класс аргумента передаем созданный объект
+            // Generate event with named argument
+            // Pass the created object to the argument class
             if (sendDataFormEvent != null)
                 sendDataFormEvent(this, new UserEventArgs(temp));
 
-            //Закрываем форму
+            // Close the form
             this.Close();
         }
     }

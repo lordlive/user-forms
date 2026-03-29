@@ -7,17 +7,17 @@ using System.Runtime.Serialization;
 
 namespace UsersForms
 {
-    // класс в котором описываются пользователи с правами (админ/юзер) типом (юзер по умочанию или нет) и их пароли
+    // A class that describes users with rights (admin/user) of type (user by default or not) and their passwords
     [Serializable]
     public class UserClass
     {
         public String Name;
-        bool defaultUser, adminUser; //свойства - пользователь по умолчанию / права администратора 
+        bool defaultUser, adminUser; // properties - default user / administrator rights
         public String Password;
 
-        //конструктор по умолчанию
+        // default constructor
         public UserClass() { }
-        //полный конструктор
+        // full constructor
         public UserClass(String name, string pass, bool def, bool adm)
         {
             Name = name;
@@ -26,29 +26,29 @@ namespace UsersForms
             adminUser = adm;
             //count++;
         }
-        //частичный конструктор 
+        // partial constructor
         public UserClass(String name, string pass)
         {
             Name = name;
             Password = pass;
             defaultUser = adminUser = false;
         }
-       
-        // доступ к приватным переменным класа UserClass
-        public bool dUser  
+
+        // access to private variables of the UserClass class
+        public bool dUser
         {
             get
             {
                 return defaultUser;
             }
-            set            
+            set
             {
                 defaultUser = value;
             }
-            
+
         }
         public bool aUser
-        { 
+        {
             get
             {
                 return adminUser;

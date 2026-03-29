@@ -1,6 +1,7 @@
 name: Build C# application
 on:
   push:
+  workflow_dispatch:
 
 jobs:
   build-windows:
